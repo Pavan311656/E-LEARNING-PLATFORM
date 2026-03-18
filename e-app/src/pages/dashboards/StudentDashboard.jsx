@@ -242,7 +242,7 @@ export default function StudentDashboard() {
                   <p><strong>Name:</strong> {user.name}</p>
                   <p><strong>Email:</strong> {user.email}</p>
                   <p><strong>Role:</strong> {user.role}</p>
-                  <button className="btn btn-primary">Edit Profile</button>
+                  <a href="/profile" className="btn btn-primary">Go to Full Profile</a>
                 </div>
               </div>
             </div>
