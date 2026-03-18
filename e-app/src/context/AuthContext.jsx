@@ -82,8 +82,16 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const updateUserProfile = (profileData) => {
+    if (state.user) {
+      const updatedUser = { ...state.user, ...profileData };
+      dispatch({ type: "LOGIN", payload: { user: updatedUser } });
+      updateUser(state.user.id, profileData);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ ...state, signup, login, logout, updateUser, removeUser, users: getUsers() }}>
+    <AuthContext.Provider value={{ ...state, signup, login, logout, updateUser, removeUser, updateUserProfile, users: getUsers() }}>
       {children}
     </AuthContext.Provider>
   );
