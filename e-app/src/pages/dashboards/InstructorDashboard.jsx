@@ -261,6 +261,7 @@ export default function InstructorDashboard() {
                   <p><strong>Name:</strong> {user.name}</p>
                   <p><strong>Email:</strong> {user.email}</p>
                   <p><strong>Role:</strong> {user.role}</p>
+                  <a href="/instructor-profile" className="btn btn-primary">Go to Full Profile</a>
                 </div>
               </div>
             </div>
