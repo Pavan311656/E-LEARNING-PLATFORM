@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
+import Profile from "../Profile";
 
 export default function StudentDashboard() {
   const { user, logout } = useAuth();
@@ -235,16 +236,7 @@ export default function StudentDashboard() {
 
           {activeTab === "profile" && (
             <div>
-              <h2 className="mb-4">Profile</h2>
-              <div className="card shadow">
-                <div className="card-body">
-                  <h5 className="card-title">User Information</h5>
-                  <p><strong>Name:</strong> {user.name}</p>
-                  <p><strong>Email:</strong> {user.email}</p>
-                  <p><strong>Role:</strong> {user.role}</p>
-                  <a href="/profile" className="btn btn-primary">Go to Full Profile</a>
-                </div>
-              </div>
+              <Profile />
             </div>
           )}
 

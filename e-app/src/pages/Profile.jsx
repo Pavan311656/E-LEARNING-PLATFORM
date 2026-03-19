@@ -124,11 +124,6 @@ export default function Profile() {
     <div className="profile-container" style={{ fontSize: `${profileData.fontSize}px` }}>
       {/* Header */}
       <div className="profile-header">
-        <div className="back-button">
-          <a href="/dashboard/student" className="btn btn-outline-primary">
-            <i className="bi bi-arrow-left me-2"></i>Back to Dashboard
-          </a>
-        </div>
         <h1 className="mb-0">
           <i className="bi bi-person-circle me-2"></i>My Profile
         </h1>
