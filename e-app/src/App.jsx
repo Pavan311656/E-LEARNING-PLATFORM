@@ -1,6 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import ChatBot from "./components/chat_bot/ChatBot";
+
+
 
 const Signup = lazy(() => import("./pages/Signup"));
 const Login = lazy(() => import("./pages/Login"));
@@ -14,8 +17,11 @@ const Home = lazy(() => import("./pages/Home"));
 
 export default function App() {
   return (
+    
     <BrowserRouter>
+    <ChatBot />
       <Suspense fallback={<div>Loading...</div>}>
+
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<Signup />} />
