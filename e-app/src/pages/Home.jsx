@@ -38,12 +38,12 @@ export default function Home() {
 
       <div id="heroCarousel" className="carousel slide" data-bs-ride="carousel" data-bs-interval="3000" style={{ minHeight: '75vh' }}>
         <div className="carousel-indicators">
-          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" className="active"></button>
-          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" className="active"></button>
-          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" className="active"></button>
-          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="3" className="active"></button>
-          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="4" className="active"></button>
-          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="5" className="active"></button>
+          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" className="active" aria-current="true"></button>
+          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" ></button>
+          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" ></button>
+          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="3" ></button>
+          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="4" ></button>
+          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="5" ></button>
         </div>
         <div className="carousel-inner">
           <div className="carousel-item active" style={{ height: '75vh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
