@@ -7,9 +7,21 @@ const StudentPerformanceDashboard = ({ user, enrolledCourses, courseProgress, qu
   const completedCourses = enrolledCourses.filter(course => (courseProgress[course.id]?.progress || 0) >= 100);
   const inProgressCourses = enrolledCourses.filter(course => {
     const progress = courseProgress[course.id]?.progress || 0;
-    return progress > 0 && progress < 100;
+    // Consider a course "in progress" if it has some progress OR if the student has attempted quizzes for it
+    const hasQuizAttempts = quizAttempts.some(attempt => {
+      const quiz = quizzes.find(q => q.id === attempt.quizId);
+      return quiz && quiz.courseId === course.id;
+    });
+    return (progress > 0 && progress < 100) || (progress === 0 && hasQuizAttempts);
   });
-  const notStartedCourses = enrolledCourses.filter(course => (courseProgress[course.id]?.progress || 0) === 0);
+  const notStartedCourses = enrolledCourses.filter(course => {
+    const progress = courseProgress[course.id]?.progress || 0;
+    const hasQuizAttempts = quizAttempts.some(attempt => {
+      const quiz = quizzes.find(q => q.id === attempt.quizId);
+      return quiz && quiz.courseId === course.id;
+    });
+    return progress === 0 && !hasQuizAttempts;
+  });
 
   const ratingEntries = Object.values(courseRatings || []);
   const averageCourseRating = ratingEntries.length > 0
@@ -242,18 +254,19 @@ const StudentPerformanceDashboard = ({ user, enrolledCourses, courseProgress, qu
             <div className="card-body">
               <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
-                  <Pie
-                    data={completionChartData}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    dataKey="value"
-                    label={({ name, value }) => `${name}: ${value}`}
-                  >
-                    {completionChartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
+                 <Pie
+  data={completionChartData}
+  cx="50%"
+  cy="50%"
+  outerRadius={80}
+  dataKey="value"
+  // Only return a label if the value is greater than 0
+  label={({ name, value }) => value > 0 ? `${name}: ${value}` : null}
+>
+  {completionChartData.map((entry, index) => (
+    <Cell key={`cell-${index}`} fill={entry.color} />
+  ))}
+</Pie>
                   <Tooltip />
                 </PieChart>
               </ResponsiveContainer>
