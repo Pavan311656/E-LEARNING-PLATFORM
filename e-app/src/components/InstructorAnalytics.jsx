@@ -1,5 +1,6 @@
 import React from 'react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+// import { setMouseClickAxisIndex } from 'recharts/types/state/tooltipSlice';
 
 const InstructorAnalytics = ({ userId, courses, enrollments, quizzes, quizAttempts }) => {
   // Calculate real data from props
@@ -224,7 +225,7 @@ const InstructorAnalytics = ({ userId, courses, enrollments, quizzes, quizAttemp
                       <th>Enrolled</th>
                       <th>Completed</th>
                       <th>Completion Rate</th>
-                      <th>Avg Watch Time (min)</th>
+                      <th>Total Watch Time (min)</th>
                     </tr>
                   </thead>
                   <tbody>
