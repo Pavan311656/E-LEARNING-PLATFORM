@@ -14,7 +14,7 @@ export default function Home() {
       {/* Navbar */}
       <nav className={`navbar navbar-expand-lg ${theme === "dark" ? "navbar-dark bg-dark" : "navbar-light bg-light"} shadow-sm`}>
         <div className="container-fluid">
-          <Link className="navbar-brand fw-bold text-primary" to="/">E-Learn Platform</Link>
+          <Link className="navbar-brand fw-bold text-primary" to="/">E-Learning Platform</Link>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span className="navbar-toggler-icon"></span>
           </button>
@@ -38,12 +38,12 @@ export default function Home() {
 
       <div id="heroCarousel" className="carousel slide" data-bs-ride="carousel" data-bs-interval="3000" style={{ minHeight: '75vh' }}>
         <div className="carousel-indicators">
-          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" className="active" style={{ backgroundColor: theme === 'dark' ? '#ffffff' : '#000000', opacity: 0.7 }}></button>
-          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" style={{ backgroundColor: theme === 'dark' ? '#ffffff' : '#000000', opacity: 0.7 }}></button>
-          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" style={{ backgroundColor: theme === 'dark' ? '#ffffff' : '#000000', opacity: 0.7 }}></button>
-          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="3" style={{ backgroundColor: theme === 'dark' ? '#ffffff' : '#000000', opacity: 0.7 }}></button>
-          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="4" style={{ backgroundColor: theme === 'dark' ? '#ffffff' : '#000000', opacity: 0.7 }}></button>
-          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="5" style={{ backgroundColor: theme === 'dark' ? '#ffffff' : '#000000', opacity: 0.7 }}></button>
+          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" className="active"></button>
+          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" className="active"></button>
+          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" className="active"></button>
+          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="3" className="active"></button>
+          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="4" className="active"></button>
+          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="5" className="active"></button>
         </div>
         <div className="carousel-inner">
           <div className="carousel-item active" style={{ height: '75vh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
@@ -159,6 +159,10 @@ export default function Home() {
           <h2 className="text-center mb-5 fw-bold animate__animated animate__fadeIn">Platform Features</h2>
         </div>
         <div className="container-fluid px-0">
+          
+
+
+
           <div id="featuresCarousel" className="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
             <div className="carousel-indicators">
               <button type="button" data-bs-target="#featuresCarousel" data-bs-slide-to="0" className="active bg-secondary"></button>
