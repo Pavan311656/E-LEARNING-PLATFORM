@@ -2,13 +2,32 @@ import React, { useState } from 'react';
 
 export default function CourseForm({ onSubmit, onCancel }) {
   const [thumbType, setThumbType] = useState("url"); // "url" or "file"
+  const [durationWeeks, setDurationWeeks] = useState(0);
+  const [durationDays, setDurationDays] = useState(0);
+  const [durationHours, setDurationHours] = useState(0);
+  
   const [courseData, setCourseData] = useState({
     title: "",
     description: "",
     thumbnail: "",
-    duration: "",
+    duration: "", // Will store as "12 weeks 20 days 10 hours"
+    durationBreakdown: { weeks: 0, days: 0, hours: 0 }, // For easier parsing
     content: [{ topic: "", type: "url", videoUrl: "", topicDesc: "" }] 
   });
+
+  // Update course data whenever duration parts change
+  const handleDurationChange = (weeks, days, hours) => {
+    setDurationWeeks(weeks);
+    setDurationDays(days);
+    setDurationHours(hours);
+    
+    const durationString = `${weeks} weeks ${days} days ${hours} hours`;
+    setCourseData({
+      ...courseData,
+      duration: durationString,
+      durationBreakdown: { weeks: parseInt(weeks), days: parseInt(days), hours: parseInt(hours) }
+    });
+  };
 
   const handleAddTopic = () => {
     setCourseData({
@@ -45,7 +64,44 @@ export default function CourseForm({ onSubmit, onCancel }) {
         </div>
         <div className="col-md-4">
           <label className="form-label fw-bold small">Duration</label>
-          <input type="text" className="form-control" placeholder="e.g. 5 Weeks" onChange={(e) => setCourseData({...courseData, duration: e.target.value})} required />
+          <div className="d-flex gap-2">
+            <div className="flex-grow-1">
+              <select 
+                className="form-select form-select-sm" 
+                value={durationWeeks} 
+                onChange={(e) => handleDurationChange(e.target.value, durationDays, durationHours)}
+              >
+                {Array.from({length: 53}, (_, i) => (
+                  <option key={i} value={i}>{i} {i === 1 ? 'week' : 'weeks'}</option>
+                ))}
+              </select>
+              <small className="text-muted d-block mt-1">Weeks</small>
+            </div>
+            <div className="flex-grow-1">
+              <select 
+                className="form-select form-select-sm" 
+                value={durationDays} 
+                onChange={(e) => handleDurationChange(durationWeeks, e.target.value, durationHours)}
+              >
+                {Array.from({length: 31}, (_, i) => (
+                  <option key={i} value={i}>{i} {i === 1 ? 'day' : 'days'}</option>
+                ))}
+              </select>
+              <small className="text-muted d-block mt-1">Days</small>
+            </div>
+            <div className="flex-grow-1">
+              <select 
+                className="form-select form-select-sm" 
+                value={durationHours} 
+                onChange={(e) => handleDurationChange(durationWeeks, durationDays, e.target.value)}
+              >
+                {Array.from({length: 25}, (_, i) => (
+                  <option key={i} value={i}>{i} {i === 1 ? 'hour' : 'hours'}</option>
+                ))}
+              </select>
+              <small className="text-muted d-block mt-1">Hours</small>
+            </div>
+          </div>
         </div>
       </div>
 

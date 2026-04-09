@@ -3,9 +3,12 @@ import React from 'react';
 const StudentPerformanceDashboard = ({ student, course, enrollments, courseProgress, quizAttempts, quizzes, onClose }) => {
   // Calculate data directly from props
   const enrollmentData = enrollments.find(e => e.userId === student.id && e.courseId === course.id);
+  
+  // Format enrollment date - use enrolledAt if available
   const enrollmentDate = enrollmentData && enrollmentData.enrolledAt
-    ? new Date(enrollmentData.enrolledAt).toLocaleDateString()
+    ? new Date(enrollmentData.enrolledAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
     : 'Not Available';
+  
   const progressData = courseProgress[course.id] || { progress: 0, completedTopics: [] };
 
   // Get quiz data for this course
@@ -28,7 +31,15 @@ const StudentPerformanceDashboard = ({ student, course, enrollments, courseProgr
     if (!progressData) return { text: 'Unknown', class: 'badge bg-secondary' };
 
     const progressPercent = progressData.progress || 0;
-    const lastActive = enrollmentData?.lastActive ? new Date(enrollmentData.lastActive) : new Date();
+    const lastActive = enrollmentData?.lastActive ? new Date(enrollmentData.lastActive) : null;
+    
+    if (!lastActive) {
+      // If no lastActive, check progress to determine status
+      if (progressPercent >= 80) return { text: 'Active', class: 'badge bg-success' };
+      if (progressPercent >= 50) return { text: 'Slow', class: 'badge bg-warning' };
+      return { text: 'At Risk', class: 'badge bg-danger' };
+    }
+    
     const daysSinceActive = Math.floor((new Date() - lastActive) / (1000 * 60 * 60 * 24));
 
     if (progressPercent >= 80 && daysSinceActive <= 7) return { text: 'Active', class: 'badge bg-success' };
@@ -42,10 +53,43 @@ const StudentPerformanceDashboard = ({ student, course, enrollments, courseProgr
   const completedLessons = progressData?.completedTopics?.length || 0;
   const progressPercent = progressData?.progress || 0;
 
-  // Calculate watch time (mock calculation based on progress)
-  const totalWatchTime = Math.round((progressPercent / 100) * (totalLessons * 15)); // Assuming 15 min per lesson
+  // Calculate watch time properly based on course duration
+  const calculateWatchTime = () => {
+    if (!course.duration || progressPercent === 0) return '0 hrs 0 mins';
+    
+    let totalMinutes = 0;
+    
+    // Try new format first: "12 weeks 20 days 10 hours"
+    const weeksMatch = course.duration.match(/(\d+)\s*weeks?/i);
+    const daysMatch = course.duration.match(/(\d+)\s*days?/i);
+    const hoursMatch = course.duration.match(/(\d+)\s*hours?/i);
+    
+    if (weeksMatch || daysMatch || hoursMatch) {
+      // New format detected
+      const weeks = weeksMatch ? parseInt(weeksMatch[1]) : 0;
+      const days = daysMatch ? parseInt(daysMatch[1]) : 0;
+      const hours = hoursMatch ? parseInt(hoursMatch[1]) : 0;
+      
+      totalMinutes = (weeks * 7 * 24 * 60) + (days * 24 * 60) + (hours * 60);
+    } else {
+      // Fallback to old single-unit format parsing
+      return '0 hrs 0 mins';
+    }
+    
+    // Calculate based on progress
+    const watchedMinutes = Math.round((progressPercent / 100) * totalMinutes);
+    const hours = Math.floor(watchedMinutes / 60);
+    const mins = watchedMinutes % 60;
+    
+    return `${hours} hrs ${mins} mins`;
+  };
 
-  const lastActiveDate = enrollmentData?.lastActive ? new Date(enrollmentData.lastActive).toLocaleDateString() : 'Never';
+  const totalWatchTime = calculateWatchTime();
+
+  // Format lastActive date with time
+  const lastActiveDate = enrollmentData?.lastActive 
+    ? new Date(enrollmentData.lastActive).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+    : 'Never';
 
   return (
     <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
@@ -126,7 +170,7 @@ const StudentPerformanceDashboard = ({ student, course, enrollments, courseProgr
                 <div className="row text-center">
                   <div className="col-md-4">
                     <div className="border rounded p-3">
-                      <h4 className="text-success">{totalWatchTime} min</h4>
+                      <h4 className="text-success">{totalWatchTime}</h4>
                       <small className="text-muted">Total Watch Time</small>
                     </div>
                   </div>
