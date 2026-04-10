@@ -18,6 +18,7 @@ export default function InstructorDashboard() {
 
   const [courses, setCourses] = useState(() => JSON.parse(localStorage.getItem("APP_COURSES") || "[]"));
   const [enrollments, setEnrollments] = useState(() => JSON.parse(localStorage.getItem("APP_ENROLLMENTS") || "[]"));
+  //loading old quiz data to state
   const [quizzes, setQuizzes] = useState(() => JSON.parse(localStorage.getItem("APP_QUIZZES") || "[]"));
   const [complaints, setComplaints] = useState(() => JSON.parse(localStorage.getItem("APP_COMPLAINTS") || "[]"));
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -26,6 +27,7 @@ export default function InstructorDashboard() {
 
   useEffect(() => { localStorage.setItem("APP_COURSES", JSON.stringify(courses)); }, [courses]);
   useEffect(() => { localStorage.setItem("APP_ENROLLMENTS", JSON.stringify(enrollments)); }, [enrollments]);
+  // when data changed in quizes ,below useeffect will execute
   useEffect(() => { localStorage.setItem("APP_QUIZZES", JSON.stringify(quizzes)); }, [quizzes]);
   useEffect(() => { localStorage.setItem("APP_COMPLAINTS", JSON.stringify(complaints)); }, [complaints]);
   useEffect(() => { localStorage.setItem("APP_QUIZ_ATTEMPTS", JSON.stringify(quizAttempts)); }, [quizAttempts]);

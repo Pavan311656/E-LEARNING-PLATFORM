@@ -12,6 +12,12 @@ export default function AdminDashboard() {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [selectedCourseForStudent, setSelectedCourseForStudent] = useState(null);
+  const [userList, setUserList] = useState(users);
+
+  // Sync userList whenever users from context changes
+  useEffect(() => {
+    setUserList(users);
+  }, [users]);
 
   // Data
   const [courses, setCourses] = useState(() => JSON.parse(localStorage.getItem("APP_COURSES") || "[]"));
@@ -30,7 +36,7 @@ export default function AdminDashboard() {
     localStorage.setItem("APP_COMPLAINTS", JSON.stringify(complaints));
   }, [complaints]);
 
-  const totalUsers = users.length;
+  const totalUsers = userList.length;
   const totalCourses = courses.length;
   const totalQuizzes = quizzes.length;
   const pendingComplaints = complaints.filter(c => c.status === 'pending').length;
@@ -54,6 +60,13 @@ export default function AdminDashboard() {
     if (window.confirm("Remove this instructor and all their courses?")) {
       removeUser(userId);
       setCourses(courses.filter(c => c.instructorId !== userId));
+    }
+  };
+
+  const removeStudent = (userId) => {
+    if (window.confirm("Are you sure you want to delete this student account? This will remove all their enrollments and progress data.")) {
+      removeUser(userId);
+      setEnrollments(enrollments.filter(e => e.userId !== userId));
     }
   };
 
@@ -164,7 +177,7 @@ export default function AdminDashboard() {
                       </tr>
                     </thead>
                     <tbody>
-                      {users.filter(u => u.role === 'instructor').map(inst => {
+                      {userList.filter(u => u.role === 'instructor').map(inst => {
                         // Calculate students under this instructor
                         const instCourseIds = courses.filter(c => c.instructorId === inst.id).map(c => c.id);
                         const studentCount = enrollments.filter(e => instCourseIds.includes(e.courseId)).length;
@@ -203,7 +216,7 @@ export default function AdminDashboard() {
                         </thead>
                         <tbody>
                           {enrollments.filter(e => courses.some(c => c.instructorId === selectedInstructor && c.id === e.courseId)).map((enrollItem, idx) => {
-                            const student = users.find(u => u.id === enrollItem.userId);
+                            const student = userList.find(u => u.id === enrollItem.userId);
                             const course = courses.find(c => c.id === enrollItem.courseId);
                             if (!student || !course) return null;
                             return (
@@ -250,13 +263,13 @@ export default function AdminDashboard() {
                       </tr>
                     </thead>
                     <tbody>
-                      {users.filter(u => u.role === 'student').map(stud => (
+                      {userList.filter(u => u.role === 'student').map(stud => (
                         <tr key={stud.id}>
                           <td className="fw-bold">{stud.name}</td>
                           <td>{stud.email}</td>
                           <td>{enrollments.filter(e => e.userId === stud.id).length} Courses</td>
                           <td>
-                            <button className="btn btn-sm btn-outline-danger" onClick={() => removeUser(stud.id)}>Delete Account</button>
+                            <button className="btn btn-sm btn-outline-danger" onClick={() => removeStudent(stud.id)}>Delete Account</button>
                           </td>
                         </tr>
                       ))}

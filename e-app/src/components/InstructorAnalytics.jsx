@@ -57,13 +57,39 @@ const InstructorAnalytics = ({ userId, courses, enrollments, quizzes, quizAttemp
   // Course Engagement Data
   const getDurationMinutes = (durationLabel) => {
     if (!durationLabel) return 120;
-    const match = durationLabel.match(/\d+(\.\d+)?/);
+    
+    // Try new format first: "12 weeks 20 days 10 hours"
+    const weeksMatch = durationLabel.match(/(\d+)\s*weeks?/i);
+    const daysMatch = durationLabel.match(/(\d+)\s*days?/i);
+    const hoursMatch = durationLabel.match(/(\d+)\s*hours?/i);
+    
+    if (weeksMatch || daysMatch || hoursMatch) {
+      // New combined format
+      const weeks = weeksMatch ? parseInt(weeksMatch[1]) : 0;
+      const days = daysMatch ? parseInt(daysMatch[1]) : 0;
+      const hours = hoursMatch ? parseInt(hoursMatch[1]) : 0;
+      
+      return Math.round((weeks * 7 * 24 * 60) + (days * 24 * 60) + (hours * 60));
+    }
+    
+    // Fallback to old format
+    const match = durationLabel.match(/(\d+(?:\.\d+)?)\s*(week|day|hour|hr|h)/i);
     if (!match) return 120;
-    const value = parseFloat(match[0]);
-    if (durationLabel.toLowerCase().includes('week')) return Math.round(value * 7 * 60);
-    if (durationLabel.toLowerCase().includes('day')) return Math.round(value * 24 * 60);
-    if (durationLabel.toLowerCase().includes('hour')) return Math.round(value * 60);
-    return Math.round(value * 60);
+    const value = parseFloat(match[1]);
+    const unit = match[2].toLowerCase();
+    if (unit === 'week') return Math.round(value * 7 * 24 * 60);
+    if (unit === 'day') return Math.round(value * 24 * 60);
+    if (unit === 'hour' || unit === 'hr' || unit === 'h') return Math.round(value * 60);
+    return 120;
+  };
+
+  // Format minutes to hours and minutes
+  const formatWatchTime = (minutes) => {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    if (hours === 0) return `${mins} mins`;
+    if (mins === 0) return `${hours} hrs`;
+    return `${hours} hrs ${mins} mins`;
   };
 
   const courseEngagement = myCourses.map(course => {
@@ -71,7 +97,8 @@ const InstructorAnalytics = ({ userId, courses, enrollments, quizzes, quizAttemp
     const progressPercent = courseProgress[course.id]?.progress || 0;
     const completed = progressPercent >= 100 ? courseEnrollments.length : 0;
     const durationMinutes = getDurationMinutes(course.duration);
-    const avgWatchTime = Math.round((progressPercent / 100) * durationMinutes);
+    const avgWatchTimeMinutes = Math.round((progressPercent / 100) * durationMinutes);
+    const avgWatchTime = formatWatchTime(avgWatchTimeMinutes);
     return {
       course: course.title,
       enrolled: courseEnrollments.length,
@@ -225,7 +252,7 @@ const InstructorAnalytics = ({ userId, courses, enrollments, quizzes, quizAttemp
                       <th>Enrolled</th>
                       <th>Completed</th>
                       <th>Completion Rate</th>
-                      <th>Total Watch Time (min)</th>
+                      <th>Avg Watch Time</th>
                     </tr>
                   </thead>
                   <tbody>

@@ -97,7 +97,16 @@ export default function StudentDashboard() {
 
   const enroll = (courseId) => {
     if ((enrollments || []).some(e => e.userId === user.id && e.courseId === courseId)) return;
-    setEnrollments([...enrollments, { userId: user.id, courseId }]);
+    setEnrollments([...enrollments, { userId: user.id, courseId, enrolledAt: new Date().toISOString(), lastActive: new Date().toISOString() }]);
+  };
+
+  // Update lastActive when student accesses course content
+  const updateLastActive = (courseId) => {
+    setEnrollments(prev => prev.map(e => 
+      e.userId === user.id && e.courseId === courseId 
+        ? { ...e, lastActive: new Date().toISOString() }
+        : e
+    ));
   };
 
   const handleTopicComplete = (courseId, topic) => {
@@ -619,6 +628,7 @@ export default function StudentDashboard() {
               onEnroll={enroll}
               onBack={() => { setSelectedCourse(null); setActiveTab("browse"); }}
               onTopicComplete={handleTopicComplete}
+              onUpdateLastActive={updateLastActive}
             />
           )}
         </div>

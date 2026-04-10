@@ -1,8 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-export default function CoursePlayer({ course, onBack, onEnroll, isEnrolled, onTopicComplete }) {
+export default function CoursePlayer({ course, onBack, onEnroll, isEnrolled, onTopicComplete, onUpdateLastActive }) {
   const [currentVideo, setCurrentVideo] = useState(course.content?.[0] || null);
   const [completedTopics, setCompletedTopics] = useState(new Set());
+
+  // Update lastActive when course is opened
+  useEffect(() => {
+    if (isEnrolled && typeof onUpdateLastActive === "function") {
+      onUpdateLastActive(course.id);
+    }
+  }, [course.id, isEnrolled, onUpdateLastActive]);
 
   const getEmbedUrl = (url) => {
     if (!url) return "";
